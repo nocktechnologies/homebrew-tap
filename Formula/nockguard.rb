@@ -1,9 +1,9 @@
 class Nockguard < Formula
   desc "MCP firewall for AI agent fleets: per-agent tool policies and audit trails"
   homepage "https://github.com/nocktechnologies/nockguard"
-  url "https://github.com/nocktechnologies/nockguard/archive/refs/tags/v0.8.0.tar.gz"
+  url "https://github.com/nocktechnologies/nockguard/archive/refs/tags/v0.9.0.tar.gz"
 
-  sha256 "765b42bf64454a11748cb03967a4c88ab4e0715f78d48db98d37f39dc9bc11d6"
+  sha256 "932d8649b117161cdd4c508048dc7e6433efb722bf981f6467ee284eeab6527b"
   license "MIT"
   depends_on "go" => :build
 
