@@ -19,6 +19,10 @@ Move dated handoffs to `docs/archive/`.
 
 ## What bit us
 
+- Hosted macOS has passwordless sudo, so NockLock doctor honestly reports
+  PARTIAL. Smoke accepts exit 3 only for the sole reachable sudo-no-prompt
+  warning, with SEATBELT, all five boundaries enforced and no gaps; the
+  remaining probes, wrap and authentic signed-audit checks still must pass.
 - The path checker flagged brew tap names inside fenced commands as missing
   repo paths, so it now skips fenced code. See `AGENTS.md` for how to write
   non-repo paths in prose.
