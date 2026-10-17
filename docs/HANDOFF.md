@@ -6,6 +6,9 @@ Move dated handoffs to `docs/archive/`.
 
 ## What changed
 
+- 2026-10-17: added a manual macos-15 release smoke workflow that builds both
+  published formulas from source and checks installed quickstart, Wall,
+  Seatbelt and signed audit behavior on a disposable hosted runner.
 - 2026-10-17, Nock 11953: added `AGENTS.md` (agent index), `CLAUDE.md`
   (imports it), this file, `docs/archive/` and
   `scripts/check-agents-paths.py`, run in CI by
@@ -22,5 +25,5 @@ Move dated handoffs to `docs/archive/`.
 
 ## Still open
 
-- Nothing from Nock 11953. The path check is the only CI; formulas are still
-  checked by hand with brew audit and brew test (see `AGENTS.md`).
+- Dispatch the release smoke after both formula bumps merge; require its
+  product reports and signed-session evidence before closing distribution.
