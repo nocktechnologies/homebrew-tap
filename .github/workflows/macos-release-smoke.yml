@@ -1,0 +1,81 @@
+name: macOS release smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      nockguard_tag:
+        description: Published NockGuard tag matching the tap
+        required: true
+        default: v0.10.1
+      nocklock_tag:
+        description: Published NockLock tag matching the tap
+        required: true
+        default: v0.13.0
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      GUARD_TAG: ${{ inputs.nockguard_tag }}
+      LOCK_TAG: ${{ inputs.nocklock_tag }}
+      HOMEBREW_NO_ANALYTICS: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Resolve published release tags to immutable commits
+        id: releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for product in nockguard nocklock; do
+            if [[ "$product" == nockguard ]]; then tag="$GUARD_TAG"; else tag="$LOCK_TAG"; fi
+            [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+            test "$(gh api "repos/nocktechnologies/$product/releases/tags/$tag" --jq 'select(.draft == false) | .tag_name')" = "$tag"
+            commit=$(gh api "repos/nocktechnologies/$product/commits/$tag" --jq .sha)
+            [[ "$commit" =~ ^[0-9a-f]{40}$ ]]
+            echo "${product}_commit=$commit" >> "$GITHUB_OUTPUT"
+            printf '%s %s %s\n' "$product" "$tag" "$commit"
+          done
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: nocktechnologies/nockguard
+          ref: ${{ steps.releases.outputs.nockguard_commit }}
+          path: guard-source
+          persist-credentials: false
+      - name: Fresh source installs and formula tests
+        run: |
+          umask 022
+          brew update
+          brew tap nocktechnologies/tap
+          tap=$(brew --repository nocktechnologies/tap)
+          git -C "$tap" rev-parse HEAD
+          grep -Fx "  url \"https://github.com/nocktechnologies/nockguard/archive/refs/tags/$GUARD_TAG.tar.gz\"" "$tap/Formula/nockguard.rb"
+          grep -Fx "  url \"https://github.com/nocktechnologies/nocklock/archive/refs/tags/$LOCK_TAG.tar.gz\"" "$tap/Formula/nocklock.rb"
+          test -z "$(brew list --versions nockguard nocklock)"
+          brew install --build-from-source nocktechnologies/tap/nockguard nocktechnologies/tap/nocklock
+          brew test nocktechnologies/tap/nockguard
+          brew test nocktechnologies/tap/nocklock
+      - name: Installed product smoke
+        env:
+          GUARD_COMMIT: ${{ steps.releases.outputs.nockguard_commit }}
+          LOCK_COMMIT: ${{ steps.releases.outputs.nocklock_commit }}
+        run: |
+          umask 022
+          mkdir smoke-evidence
+          sw_vers > smoke-evidence/platform.txt
+          uname -sm >> smoke-evidence/platform.txt
+          printf '%s %s\n' "${ImageOS:-unknown}" "${ImageVersion:-unknown}" >> smoke-evidence/platform.txt
+          printf 'nockguard %s %s\nnocklock %s %s\n' "$GUARD_TAG" "$GUARD_COMMIT" "$LOCK_TAG" "$LOCK_COMMIT" > smoke-evidence/release-refs.txt
+          git -C "$(brew --repository nocktechnologies/tap)" rev-parse HEAD > smoke-evidence/tap-commit.txt
+          python3 scripts/macos-release-smoke.py guard-source smoke-evidence
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: macos-release-smoke
+          path: smoke-evidence/
+          if-no-files-found: ignore

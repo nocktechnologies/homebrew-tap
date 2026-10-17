@@ -22,6 +22,8 @@ Read `docs/HANDOFF.md` before you start. Add to it before you finish.
 | `Formula/nockguard.rb` | NockGuard formula: builds two binaries, `nockguard` and `nockguard-wall`. |
 | `.coderabbit.yaml` | Turns CodeRabbit auto-review off. Gander (nock-review) is the reviewer here. |
 | `scripts/check-agents-paths.py` | Fails when this file names a repo path that git does not track. |
+| `.github/workflows/macos-release-smoke.yml` | Manual disposable macOS release installation and product smoke. |
+| `scripts/macos-release-smoke.py` | Checks installed quickstart, Wall, Seatbelt and signed audit behavior. |
 | `docs/HANDOFF.md` | Pod notes: what changed, what bit us, what is still open. |
 | `docs/archive/` | Dated handoffs and retired docs. |
 | `CLAUDE.md` | Imports this file for Claude Code. Claude-only notes go there, nothing else. |
@@ -60,7 +62,7 @@ To bump a formula:
 4. Branch, commit, open a PR on `main`. Title and squash subject:
    `<formula> <X.Y.Z> (<short summary of the release>)`. The body gives the tag,
    the commit it points at, the hash and how it was computed.
-5. After merge, on a Mac (the Mac mini): `brew update`, then install or
+5. After merge, on a clean Mac: `brew update`, then install or
    upgrade, `brew test nocktechnologies/tap/<formula>`, `<formula> version`,
    and the product smoke from that product's release runbook. Record the tap
    commit and results in the release handoff.
@@ -89,7 +91,11 @@ version strings without backticks, or with a `<placeholder>`. CI runs the same
 check on every PR and push to main:
 [.github/workflows/agents-paths.yml](.github/workflows/agents-paths.yml), one
 job on a GitHub-hosted runner (free on this public repo), read-only, no
-secrets. It is the only workflow. Never add a self-hosted runner here.
+secrets. The manual workflow `.github/workflows/macos-release-smoke.yml` runs
+only on dispatch, on a disposable hosted macos-15 runner. After both formula
+bumps merge, dispatch it with the published product tags matching the tap;
+inspect its reports and signed-session evidence. Never add a self-hosted
+runner here.
 
 ## Rules an agent cannot guess
 
