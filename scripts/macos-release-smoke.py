@@ -64,21 +64,30 @@ def check_lock(evidence):
         for name in ("config", "state"):
             (root / name).mkdir(mode=0o700)
 
-        def run(label, *args):
+        def run(label, *args, expected_codes=(0,)):
             result = subprocess.run([binary, *args], cwd=project, env=env, text=True,
                                     capture_output=True, timeout=120)
             (evidence / f"lock-{label}.txt").write_text(result.stdout + result.stderr)
             print(result.stdout + result.stderr, end="")
-            result.check_returncode()
+            if result.returncode not in expected_codes:
+                result.check_returncode()
             return result.stdout
 
         assert run("version", "version").strip() == f"NockLock {os.environ['LOCK_TAG']}"
         run("init", "init")
-        doctor = json.loads(run("doctor", "doctor", "--json"))
-        assert doctor["verdict"] == "PROTECTED" and doctor["egress_level"] == "SEATBELT", doctor
+        doctor = json.loads(run("doctor", "doctor", "--json", expected_codes=(0, 3)))
+        assert doctor["verdict"] in {"PROTECTED", "PARTIAL"}, doctor
+        assert doctor["egress_level"] == "SEATBELT" and not doctor.get("gaps"), doctor
         assert {b["name"]: b["posture"] for b in doctor["boundaries"]} == {
             name: "enforced" for name in ("filesystem", "signing-key", "syscall", "network", "secrets")
         }, doctor
+        # Match released Mac CI: only the hosted runner's NOPASSWD sudo may remain reachable.
+        warnings = [(c["group"], c["name"], c["severity"], c["status"]) for c in doctor["checks"]
+                    if c["severity"] in {"warning", "critical"}]
+        reachable = [c["name"] for c in doctor["checks"] if c["group"] == "Deputies" and c["status"] == "reachable"]
+        partial = doctor["verdict"] == "PARTIAL"
+        assert warnings == ([("Deputies", "sudo-no-prompt", "warning", "reachable")] if partial else []), doctor
+        assert reachable == (["sudo-no-prompt"] if partial else []), doctor
         verify = json.loads(run("verify", "verify", "--json"))
         checks = {c["fence"]: c for c in verify["checks"]}
         for name in ("filesystem", "network", "secret"):
