@@ -8,7 +8,8 @@ Move dated handoffs to `docs/archive/`.
 
 - 2026-10-17, Nock 11953: added `AGENTS.md` (agent index), `CLAUDE.md`
   (imports it), this file, `docs/archive/` and
-  `scripts/check-agents-paths.py`. No formula changed.
+  `scripts/check-agents-paths.py`, run in CI by
+  `.github/workflows/agents-paths.yml`. No formula changed.
 - 2026-10-17: Formula/nocklock.rb at v0.12.0 (PR 1),
   Formula/nockguard.rb at v0.10.0 (PR 2). Post-merge brew test and smoke
   run on the Mac mini, per each product's release runbook.
@@ -21,5 +22,5 @@ Move dated handoffs to `docs/archive/`.
 
 ## Still open
 
-- No CI; adding a workflow or runner is Kevin's call (see `AGENTS.md`).
-  Run the path check by hand until then.
+- Nothing from Nock 11953. The path check is the only CI; formulas are still
+  checked by hand with brew audit and brew test (see `AGENTS.md`).

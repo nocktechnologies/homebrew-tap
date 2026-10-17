@@ -85,9 +85,11 @@ python3 scripts/check-agents-paths.py
 
 Run it before every PR that touches this file. It checks backtick spans and
 links, not fenced code. In prose, write tap names, product-repo paths and
-version strings without backticks, or with a `<placeholder>`. There is no CI here: the repo
-has no workflow and no self-hosted runner, and it is public, so runner changes
-are Kevin's call. Do not add a workflow, and never use a `*-latest` runner.
+version strings without backticks, or with a `<placeholder>`. CI runs the same
+check on every PR and push to main:
+[.github/workflows/agents-paths.yml](.github/workflows/agents-paths.yml), one
+job on a GitHub-hosted runner (free on this public repo), read-only, no
+secrets. It is the only workflow. Never add a self-hosted runner here.
 
 ## Rules an agent cannot guess
 
