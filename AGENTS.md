@@ -41,13 +41,17 @@ To bump a formula:
 
 1. Confirm the tag `v<X.Y.Z>` exists on the product repo and points at the
    released main commit.
-2. Download the source tarball and hash it:
+2. Download the source tarball from the formula's own repo (`<formula>` is
+   `nocklock` or `nockguard`) and hash it:
 
    ```bash
    curl -fsSL -o /tmp/src.tar.gz \
-     https://github.com/nocktechnologies/nocklock/archive/refs/tags/v<X.Y.Z>.tar.gz
+     https://github.com/nocktechnologies/<formula>/archive/refs/tags/v<X.Y.Z>.tar.gz
    sha256sum /tmp/src.tar.gz
    ```
+
+   Check that the URL you hashed is the new `url` line of the formula you are
+   bumping, so one product's hash never lands in the other's formula.
 
    Download it twice, or re-derive the hash already in the formula with the
    same method, and say which in the PR body.
