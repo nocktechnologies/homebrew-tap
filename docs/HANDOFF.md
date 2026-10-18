@@ -15,7 +15,7 @@ Move dated handoffs to `docs/archive/`.
   `.github/workflows/agents-paths.yml`. No formula changed.
 - 2026-10-17: Formula/nocklock.rb at v0.12.0 (PR 1),
   Formula/nockguard.rb at v0.10.0 (PR 2). Post-merge brew test and smoke
-  run on a clean Mac, per each product's release runbook.
+  run on a Mac, per each product's release runbook.
 
 ## What bit us
 
