@@ -9,13 +9,13 @@ Move dated handoffs to `docs/archive/`.
 - 2026-10-17: added a manual macos-15 release smoke workflow that builds both
   published formulas from source and checks installed quickstart, Wall,
   Seatbelt and signed audit behavior on a disposable hosted runner.
-- 2026-10-17, Nock 11953: added `AGENTS.md` (agent index), `CLAUDE.md`
+- 2026-10-17: added `AGENTS.md` (agent index), `CLAUDE.md`
   (imports it), this file, `docs/archive/` and
   `scripts/check-agents-paths.py`, run in CI by
   `.github/workflows/agents-paths.yml`. No formula changed.
 - 2026-10-17: Formula/nocklock.rb at v0.12.0 (PR 1),
   Formula/nockguard.rb at v0.10.0 (PR 2). Post-merge brew test and smoke
-  run on the Mac mini, per each product's release runbook.
+  run on a clean Mac, per each product's release runbook.
 
 ## What bit us
 

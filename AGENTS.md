@@ -20,7 +20,7 @@ Read `docs/HANDOFF.md` before you start. Add to it before you finish.
 |---|---|
 | `Formula/nocklock.rb` | NockLock formula: builds one binary, `nocklock`. |
 | `Formula/nockguard.rb` | NockGuard formula: builds two binaries, `nockguard` and `nockguard-wall`. |
-| `.coderabbit.yaml` | Turns CodeRabbit auto-review off. Gander (nock-review) is the reviewer here. |
+| `.coderabbit.yaml` | Turns CodeRabbit auto-review off. |
 | `scripts/check-agents-paths.py` | Fails when this file names a repo path that git does not track. |
 | `.github/workflows/macos-release-smoke.yml` | Manual disposable macOS release installation and product smoke. |
 | `scripts/macos-release-smoke.py` | Checks installed quickstart, Wall, Seatbelt and signed audit behavior. |
@@ -126,19 +126,18 @@ runner here.
 - **Linux gets only the CLI.** On Linux, Homebrew installs just the binary;
   NockLock's network fence and privileged helper need the source install in
   its setup docs. Do not add Linux packaging here.
-- **The worktree may hold an untracked dotenv symlink.** Dispatch worktrees
-  link one into the crm-mira checkout. The repo has no gitignore file, so stage
-  files by name; never `git add -A`.
+- **The worktree may hold an untracked dotenv symlink.** The repo has no
+  gitignore file, so stage files by name; never `git add -A`.
+- This is a public repository. `AGENTS.md` and `docs/HANDOFF.md` stay
+  product-only: no agent or person names, no internal task IDs, no internal
+  service or repository codenames, no internal hosts, and no review or
+  merge-gate procedure.
 
-## Branches, review and merge
+## Branches and commits
 
 - Default branch: `main`. There is no `next` branch here, unlike the product
   repos. Every change is a PR from a fresh branch onto `main`.
-- Gander reviews (Opus and Sol lenses). Rowan gates and squash-merges at the
-  reviewed head. Builders do not merge their own PRs.
 - Commit messages and PR text carry no agent, model or tool attribution.
-- Release gates for tap bumps come from the product's release owner (for
-  example Mira's approval of the full release sequence, tap included).
 
 ## Pod
 
