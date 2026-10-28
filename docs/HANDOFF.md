@@ -6,6 +6,8 @@ Move dated handoffs to `docs/archive/`.
 
 ## What changed
 
+- 2026-10-27: Formula/nocklock.rb now builds v0.16.1 with macOS SecurityServer isolation and Linux ancestor-metadata compatibility. Two independent downloads confirmed the source tarball checksum. The formula continues to install only the CLI; managed Linux installation uses the product release assets and guide.
+
 - 2026-10-26: Formula/nocklock.rb now builds v0.16.0, the standalone Linux installer source release. Its source tarball checksum was confirmed by two independent downloads. The formula still installs only the CLI; Linux installer assets remain withheld pending cross-version and broader network acceptance.
 
 - 2026-10-17: added a manual macos-15 release smoke workflow that builds both
