@@ -1,9 +1,9 @@
 class Nocklock < Formula
   desc "Fence your AI agents: control secrets, filesystem, and network access"
   homepage "https://github.com/nocktechnologies/nocklock"
-  url "https://github.com/nocktechnologies/nocklock/archive/refs/tags/v1.1.0.tar.gz"
+  url "https://github.com/nocktechnologies/nocklock/archive/refs/tags/v1.1.1.tar.gz"
 
-  sha256 "af2ee38810d03075765b689b8257276ea237fc6458c7552d321a5380ea3227f0"
+  sha256 "c79c1fad731c94a2e5193aff9f236ea1d575adc276bd937daa9eef2d0a065384"
   license "MIT"
   depends_on "go" => :build
 
